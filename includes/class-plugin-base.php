@@ -75,5 +75,8 @@ final class Plugin_Base {
 	 */
 	private function init_hooks() {
 		require_once WPPB_PATH . 'admin/class-metabox.php';
+
+		// Register metaboxes.
+		require_once WPPB_PATH . 'admin/metaboxes/post.php';
 	}
 }

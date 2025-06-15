@@ -139,14 +139,14 @@ class Metabox {
 				if ( isset( $field['options'] ) ) {
 					foreach ( $field['options'] as $option_value => $option_label ) {
 						$checked = checked( $field_value, $option_value, false );
-						echo '<label><input type="radio" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $option_value ) . '" ' . $checked . ' /> ' . esc_html( $option_label ) . '</label>';
+						echo '<label><input type="radio" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $option_value ) . '" ' . $checked . '/>' . esc_html( $option_label ) . '</label>';
 					}
 				}
 				break;
 
 			case 'checkbox':
 				$checked = checked( $field_value, '1', false );
-				echo '<input type="checkbox" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" value="1" ' . $checked . ' />';
+				echo '<input type="checkbox" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" value="1" ' . $checked . '/>';
 				break;
 
 			case 'switch':
@@ -177,7 +177,7 @@ class Metabox {
 				echo '<div class="media-preview">';
 				if ( $media_url ) {
 					$file_type = wp_check_filetype( $media_url );
-					if ( strpos( file_type['type'], 'image') !== false ) {
+					if ( strpos( $file_type['type'], 'image') !== false ) {
 						echo '<img src="' . esc_url( $media_url ) . '" />';
 					} else {
 						echo '<p>' . esc_html( $media_filename ) . '</p>';
