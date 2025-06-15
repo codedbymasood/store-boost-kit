@@ -3,7 +3,8 @@
  * Plugin initialization class.
  *
  * @package wp-plugin-base\includes\
- * @version 8.6.0
+ * @author Masood Mohamed <iam.masoodmohd@gmail.com>
+ * @version 1.0
  */
 
 namespace WPPB;
@@ -66,12 +67,13 @@ final class Plugin_Base {
 	 * Load required files.
 	 */
 	private function load_dependencies() {
-		require_once WPPB_PATH . 'includes/class-settings.php';
+		// require_once WPPB_PATH . 'includes/class-settings.php';
 	}
 
 	/**
 	 * Hook into WordPress.
 	 */
 	private function init_hooks() {
+		require_once WPPB_PATH . 'admin/class-metabox.php';
 	}
 }
