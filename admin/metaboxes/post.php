@@ -24,17 +24,19 @@ $fields = array(
 			'type'  => 'textarea',
 		),
 		array(
-			'id' => 'faq',
+			'id' => 'faq5',
 			'label' => 'FAQs',
 			'type' => 'repeater',
 			'fields' => array(
 				array(
 					'id' => 'question',
 					'label' => 'Question',
+					'type' => 'text',
 				),
 				array(
 					'id' => 'answer',
 					'label' => 'Answer',
+					'type' => 'text',
 				),
 			),
 		),

@@ -99,13 +99,22 @@ class Metabox {
 		}
 	}
 
-	private function render_field( $field, $post ) {
-		$field_id    = $this->metabox_id . '_' . $field['id'];
-		$field_name  = $this->metabox_id . '[' . $field['id'] . ']';
-		$field_value = get_post_meta( $post->ID, $field_name, true );
+	private function render_field( $field, $post, $is_repeater = false, $repeater_index = null, $parent_field_id = null ) {
+		if ( $is_repeater ) {
+			$field_id    = $this->metabox_id . '_' . $parent_field_id . '_' . $repeater_index . '_' . $field['id'];
+			$field_name  = $this->metabox_id . '[' . $parent_field_id . '][' . $repeater_index . '][' . $field['id'] . ']';
+			
+			// Get repeater field value
+			$parent_value = get_post_meta( $post->ID, $this->metabox_id . '[' . $parent_field_id . ']', true );
+			$field_value = isset( $parent_value[$repeater_index][$field['id']] ) ? $parent_value[$repeater_index][$field['id']] : '';
+		} else {
+			$field_id    = $this->metabox_id . '_' . $field['id'];
+			$field_name  = $this->metabox_id . '[' . $field['id'] . ']';
+			$field_value = get_post_meta( $post->ID, $field_name, true );
+		}
 
 		$condition_attr = '';
-		if ( isset( $field['condition'] ) ) {
+		if ( isset( $field['condition'] ) && !$is_repeater ) {
 			$condition_attr = 'data-condition="' . esc_attr( wp_json_encode( $field['condition'] ) ) . '"';
 		}
 
@@ -115,6 +124,80 @@ class Metabox {
 			echo '<label for="' . esc_attr( $field_id ) . '">' . esc_html( $field['label'] ) . '</label>';
 		}
 
+		// Handle repeater field type
+		if ( $field['type'] === 'repeater' && !$is_repeater ) {
+			$this->render_repeater_field( $field, $post, $field_value );
+		} else {
+			// Render all other field types using callback
+			$this->render_field_input( $field, $field_id, $field_name, $field_value, $is_repeater );
+		}
+
+		if ( isset( $field['description'] ) ) {
+			echo '<p class="description">' . esc_html( $field['description'] ) . '</p>';
+		}
+
+		echo '</div>';
+	}
+
+	private function render_repeater_field( $field, $post, $field_value ) {
+		$repeater_values = (array) $field_value;
+		echo '<div class="repeater-container" data-field-id="' . esc_attr( $field['id'] ) . '">';
+
+		// Render existing items
+		if ( !empty( $repeater_values ) && is_array( $repeater_values ) ) {
+			foreach ( $repeater_values as $index => $repeater_value ) {
+				echo '<div class="repeater-item" data-index="' . esc_attr( $index ) . '">';
+				echo '<div class="repeater-header">';
+				echo '<span class="repeater-title">' . esc_html__( 'Item', 'wp-plugin-base' ) . ' ' . ($index + 1) . '</span>';
+				echo '<span class="remove-item">×</span>';
+				echo '</div>';
+				echo '<div class="repeater-content">';
+
+				foreach ( $field['fields'] as $repeater_field ) {
+					$this->render_field( $repeater_field, $post, true, $index, $field['id'] );
+				}
+
+				echo '</div>';
+				echo '</div>';
+			}
+		}
+
+		// Template for new items.
+		echo '<script type="text/template" class="repeater-template">';
+		echo '<div class="repeater-item" data-index="{INDEX}">';
+		echo '<div class="repeater-header">';
+		echo '<span class="repeater-title">' . esc_html__( 'Item', 'wp-plugin-base' ) . ' {INDEX_DISPLAY}</span>';
+		echo '<span class="remove-item">×</span>';
+		echo '</div>';
+		echo '<div class="repeater-content">';
+
+		foreach ( $field['fields'] as $repeater_field ) {
+			$template_field_id = $this->metabox_id . '_' . $field['id'] . '_{INDEX}_' . $repeater_field['id'];
+			$template_field_name = $this->metabox_id . '[' . $field['id'] . '][{INDEX}][' . $repeater_field['id'] . ']';
+
+			echo '<div class="metabox-field">';
+			if ( isset( $repeater_field['label'] ) ) {
+				echo '<label for="' . esc_attr( $template_field_id ) . '">' . esc_html( $repeater_field['label'] ) . '</label>';
+			}
+
+			// Render field without value and with template placeholders
+			$this->render_field_input( $repeater_field, $template_field_id, $template_field_name, '', true );
+
+			if ( isset( $repeater_field['description'] ) ) {
+				echo '<p class="description">' . esc_html( $repeater_field['description'] ) . '</p>';
+			}
+			echo '</div>';
+		}
+
+		echo '</div>';
+		echo '</div>';
+		echo '</script>';
+
+		echo '</div>';
+		echo '<button type="button" class="button add-repeater-item">' . esc_html__( 'Add Item', 'wp-plugin-base' ) . '</button>';
+	}
+
+	private function render_field_input( $field, $field_id, $field_name, $field_value, $is_repeater = false ) {
 		switch ( $field['type'] ) {
 			case 'text':
 				echo '<input type="text" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" />';
@@ -139,7 +222,8 @@ class Metabox {
 				if ( isset( $field['options'] ) ) {
 					foreach ( $field['options'] as $option_value => $option_label ) {
 						$checked = checked( $field_value, $option_value, false );
-						echo '<label><input type="radio" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $option_value ) . '" ' . $checked . '/>' . esc_html( $option_label ) . '</label>';
+						$radio_id = $field_id . '_' . $option_value;
+						echo '<label for="' . esc_attr( $radio_id ) . '"><input type="radio" id="' . esc_attr( $radio_id ) . '" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $option_value ) . '" ' . $checked . '/>' . esc_html( $option_label ) . '</label><br>';
 					}
 				}
 				break;
@@ -158,7 +242,8 @@ class Metabox {
 				break;
 
 			case 'color':
-				echo '<input type="text" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" class="color-picker" />';
+				$color_class = $is_repeater ? 'color-picker-repeater' : 'color-picker';
+				echo '<input type="text" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" class="' . esc_attr( $color_class ) . '" />';
 				break;
 
 			case 'media':
@@ -178,63 +263,14 @@ class Metabox {
 				if ( $media_url ) {
 					$file_type = wp_check_filetype( $media_url );
 					if ( strpos( $file_type['type'], 'image') !== false ) {
-						echo '<img src="' . esc_url( $media_url ) . '" />';
+						echo '<img src="' . esc_url( $media_url ) . '" style="max-width: 150px; height: auto;" />';
 					} else {
 						echo '<p>' . esc_html( $media_filename ) . '</p>';
 					}
 				}
 				echo '</div>';
 				break;
-
-			case 'repeater':
-				$repeater_values = (array) $field_value;
-				echo '<div class="repeater-container">';
-
-				foreach ( $repeater_values as $index => $repeater_value ) {
-					echo '<div class="repeater-item">';
-					echo '<span class="remove-item">×</span>';
-					foreach ( $field['fields'] as $repeater_field ) {
-						$repeater_field['id'] = $field['id'] . '][' . $index . '][' . $repeater_field['id'];
-						$repeater_field_value = isset( $repeater_value[ $repeater_field['id'] ] ) ? $repeater_value[ $repeater_field['id'] ] : '';
-
-						echo '<div class="metabox-field">';
-						if ( isset( $repeater_field['label'] ) ) {
-							echo '<label>' . esc_html( $repeater_field['label'] ) . '</label>';
-						}
-
-						$repeater_field_name = $this->metabox_id . '[' . $field['id'] . '][' . $index . '][' . $repeater_field['id'] . ']';
-						echo '<input type="text" name="' . esc_attr( $repeater_field_name ) . '" value="' . esc_attr( $repeater_field_value ) . '" />';
-						echo '</div>';
-					}
-					echo '</div>';
-				}
-
-				// Template for new items.
-				echo '<div class="repeater-template" style="display: none;">';
-				echo '<div class="repeater-item">';
-				echo '<span class="remove-item">×</span>';
-				foreach ( $field['fields'] as $repeater_field ) {
-					echo '<div class="metabox-field">';
-					if ( isset( $repeater_field['label'] ) ) {
-						echo '<label>' . esc_html( $repeater_field['label'] ) . '</label>';
-					}
-					$repeater_field_name = $this->metabox_id . '[' . $field['id'] . '][{INDEX}][' . $repeater_field['id'] . ']';
-					echo '<input type="text" name="' . esc_attr( $repeater_field_name ) . '" value="" />';
-					echo '</div>';
-				}
-				echo '</div>';
-				echo '</div>';
-
-				echo '</div>';
-				echo '<button type="button" class="add-repeater-item">Add Item</button>';
-				break;
 		}
-
-		if ( isset( $field['description'] ) ) {
-			echo '<p class="description">' . esc_html( $field['description'] ) . '</p>';
-		}
-
-		echo '</div>';
 	}
 
 	public function save_metabox( $post_id ) {
@@ -253,9 +289,20 @@ class Metabox {
 		if ( isset( $_POST[ $this->metabox_id ] ) ) {
 			$data = $_POST[ $this->metabox_id ];
 			foreach ( $data as $key => $value ) {
-				update_post_meta( $post_id, $this->metabox_id . '[' . $key . ']', $value );
+				// Sanitize data before saving
+				$sanitized_value = $this->sanitize_field_value( $value );
+				update_post_meta( $post_id, $this->metabox_id . '[' . $key . ']', $sanitized_value );
 			}
 		}
+	}
+
+	private function sanitize_field_value( $value ) {
+		if ( is_array( $value ) ) {
+			return array_map( array( $this, 'sanitize_field_value' ), $value );
+		}
+
+		// Basic sanitization - you might want to make this more specific based on field type
+		return sanitize_text_field( $value );
 	}
 
 	// Helper method to get field value.
