@@ -2,7 +2,7 @@
 /**
  * Metabox register class.
  *
- * @package wp-plugin-base\includes\
+ * @package wp-plugin-base\admin\
  * @author Masood Mohamed <iam.masoodmohd@gmail.com>
  * @version 1.0
  */

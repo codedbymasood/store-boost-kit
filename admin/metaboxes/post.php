@@ -31,7 +31,7 @@ $fields = array(
 				array(
 					'id' => 'question',
 					'label' => 'Question',
-					'type' => 'text',
+					'type' => 'textarea',
 				),
 				array(
 					'id' => 'answer',
