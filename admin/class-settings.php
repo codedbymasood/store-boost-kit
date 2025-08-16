@@ -197,13 +197,13 @@ class Settings {
 
 		$admin_url = admin_url( 'admin.php?page=' . $this->menu_slug );
 
-		$current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : Utils::convert_case( $tabs[0] );
+		$current_tab = isset( $_GET['tab'] ) && ! empty( isset( $_GET['tab'] ) ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : Utils::convert_case( $tabs[0] );
 		?>
 		<div class="wrap">
 			<h1><?php echo esc_html( $this->page_title ); ?></h1>	
 			<?php if ( isset( $_GET['settings-updated'] ) ) : ?>
 				<div class="notice notice-success is-dismissible">
-					<p>Settings saved successfully!</p>
+					<p><?php esc_html_e( 'Settings saved successfully!', 'wp-plugin-base' ); ?></p>
 				</div>
 			<?php endif; ?>	
 			<h2 class="nav-tab-wrapper">
@@ -264,6 +264,12 @@ class Settings {
 
 			<?php
 			switch ( $type ) {
+				case 'group_start':
+					echo '<div class="field-group">';
+					break;
+				case 'group_end':
+					echo '</div>';
+					break;
 				case 'textarea':
 					echo '<textarea id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" rows="4" cols="50">' . esc_textarea( $value ) . '</textarea>';
 					break;
@@ -315,6 +321,10 @@ class Settings {
 						echo '<p>* ' . esc_html( $description ) . '</p>';
 					}
 					echo '</div>';
+					break;
+
+				case 'number':
+					echo '<input type="number" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" class="regular-text">';
 					break;
 
 				case 'text':

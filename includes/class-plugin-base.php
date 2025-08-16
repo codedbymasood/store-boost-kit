@@ -45,16 +45,6 @@ final class Plugin_Base {
 	}
 
 	/**
-	 * Prevent cloning.
-	 */
-	private function __clone() {}
-
-	/**
-	 * Prevent unserializing.
-	 */
-	private function __wakeup() {}
-
-	/**
 	 * Define plugin constants.
 	 */
 	private function define_constants() {
@@ -74,6 +64,8 @@ final class Plugin_Base {
 	 * Hook into WordPress.
 	 */
 	private function init_hooks() {
+		require_once WPPB_PATH . 'includes/sample-settings.php';
+		// Register metaboxes.
 		require_once WPPB_PATH . 'admin/class-metabox.php';
 
 		// Register metaboxes.
