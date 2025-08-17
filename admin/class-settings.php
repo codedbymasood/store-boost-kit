@@ -2,12 +2,12 @@
 /**
  * Settings class.
  *
- * @package wp-plugin-base\admin\
+ * @package store-boost-kit\admin\
  * @author Store Boost Kit <hello@storeboostkit.com>
  * @version 1.0
  */
 
-namespace SBK_PB;
+namespace STOBOKIT;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -128,11 +128,11 @@ class Settings {
 
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_style( 'settings', SBK_PB_URL . '/admin/assets/css/settings.css', array(), '1.0' );
+		wp_enqueue_style( 'settings', STOBOKIT_URL . '/admin/assets/css/settings.css', array(), '1.0' );
 
 		wp_enqueue_code_editor( array( 'type' => 'text/html' ) );
 		wp_enqueue_code_editor( array( 'type' => 'text/css' ) );
-		wp_enqueue_script( 'settings', SBK_PB_URL . '/admin/assets/js/settings.js', array( 'jquery', 'code-editor' ), '1.0', true );
+		wp_enqueue_script( 'settings', STOBOKIT_URL . '/admin/assets/js/settings.js', array( 'jquery', 'code-editor' ), '1.0', true );
 	}
 
 	/**
@@ -228,7 +228,7 @@ class Settings {
 			<h1><?php echo esc_html( $this->page_title ); ?></h1>	
 			<?php if ( isset( $_GET['settings-updated'] ) ) : ?>
 				<div class="notice notice-success is-dismissible">
-					<p><?php esc_html_e( 'Settings saved successfully!', 'wp-plugin-base' ); ?></p>
+					<p><?php esc_html_e( 'Settings saved successfully!', 'store-boost-kit' ); ?></p>
 				</div>
 			<?php endif; ?>	
 			<h2 class="nav-tab-wrapper">
@@ -251,7 +251,7 @@ class Settings {
 						<?php endforeach; ?>
 					</div>
 				<?php endforeach; ?>
-				<?php submit_button( esc_html__( 'Save Settings', 'wp-plugin-base' ) ); ?>
+				<?php submit_button( esc_html__( 'Save Settings', 'store-boost-kit' ) ); ?>
 			</form>
 		</div>
 		<?php

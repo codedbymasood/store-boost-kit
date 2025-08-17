@@ -2,12 +2,12 @@
 /**
  * Metabox register class.
  *
- * @package wp-plugin-base\admin\
+ * @package store-boost-kit\admin\
  * @author Store Boost Kit <hello@storeboostkit.com>
  * @version 1.0
  */
 
-namespace SBK_PB;
+namespace STOBOKIT;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -57,8 +57,8 @@ class Metabox {
 		wp_enqueue_media();
 		wp_enqueue_script( 'wp-color-picker' );
 		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_style( 'metabox', SBK_PB_URL . 'admin/assets/css/metabox.css', array(), '1.0' );
-		wp_enqueue_script( 'admin', SBK_PB_URL . 'admin/assets/js/admin.js', array(), '1.0', true );
+		wp_enqueue_style( 'metabox', STOBOKIT_URL . 'admin/assets/css/metabox.css', array(), '1.0' );
+		wp_enqueue_script( 'admin', STOBOKIT_URL . 'admin/assets/js/metabox.js', array(), '1.0', true );
 	}
 
 	public function render_metabox( $post ) {
@@ -105,12 +105,12 @@ class Metabox {
 
 	private function render_field( $field, $post, $is_repeater = false, $repeater_index = null, $parent_field_id = null ) {
 		if ( $is_repeater ) {
-			$field_id    = $parent_field_id . '_' . $repeater_index . '_' . $field['id'];
-			$field_name  = $parent_field_id . '[' . $repeater_index . '][' . $field['id'] . ']';
+			$field_id   = $parent_field_id . '_' . $repeater_index . '_' . $field['id'];
+			$field_name = $parent_field_id . '[' . $repeater_index . '][' . $field['id'] . ']';
 
 			// Get repeater field value - using direct field ID.
 			$parent_value = get_post_meta( $post->ID, $parent_field_id, true );
-			$field_value = isset( $parent_value[$repeater_index][$field['id']] ) ? $parent_value[$repeater_index][$field['id']] : '';
+			$field_value  = isset( $parent_value[ $repeater_index ][ $field['id'] ] ) ? $parent_value[ $repeater_index ][ $field['id'] ] : '';
 		} else {
 			$field_id    = $field['id'];
 			$field_name  = $field['id'];
@@ -118,7 +118,7 @@ class Metabox {
 		}
 
 		$condition_attr = '';
-		if ( isset( $field['condition'] ) && !$is_repeater ) {
+		if ( isset( $field['condition'] ) && ! $is_repeater ) {
 			$condition_attr = 'data-condition="' . esc_attr( wp_json_encode( $field['condition'] ) ) . '"';
 		}
 
@@ -152,7 +152,7 @@ class Metabox {
 			foreach ( $repeater_values as $index => $repeater_value ) {
 				echo '<div class="repeater-item" data-index="' . esc_attr( $index ) . '">';
 				echo '<div class="repeater-header">';
-				echo '<span class="repeater-title">' . esc_html__( 'Item: ', 'wp-plugin-base' ) . ' ' . esc_html( ( (int) $index + 1 ) ) . '</span>';
+				echo '<span class="repeater-title">' . esc_html__( 'Item: ', 'store-boost-kit' ) . ' ' . esc_html( ( (int) $index + 1 ) ) . '</span>';
 				echo '<span class="remove-item"><span class="dashicons dashicons-no-alt"></span></span>';
 				echo '</div>';
 				echo '<div class="repeater-content">';
@@ -170,7 +170,7 @@ class Metabox {
 		echo '<script type="text/template" class="repeater-template">';
 		echo '<div class="repeater-item" data-index="{INDEX}">';
 		echo '<div class="repeater-header">';
-		echo '<span class="repeater-title">' . esc_html__( 'Item: ', 'wp-plugin-base' ) . ' {INDEX_DISPLAY}</span>';
+		echo '<span class="repeater-title">' . esc_html__( 'Item: ', 'store-boost-kit' ) . ' {INDEX_DISPLAY}</span>';
 		echo '<span class="remove-item">×</span>';
 		echo '</div>';
 		echo '<div class="repeater-content">';
@@ -198,7 +198,7 @@ class Metabox {
 		echo '</script>';
 
 		echo '</div>';
-		echo '<button type="button" class="button add-repeater-item">' . esc_html__( 'Add Item', 'wp-plugin-base' ) . '</button>';
+		echo '<button type="button" class="button add-repeater-item">' . esc_html__( 'Add Item', 'store-boost-kit' ) . '</button>';
 	}
 
 	private function render_field_input( $field, $field_id, $field_name, $field_value, $is_repeater = false ) {
@@ -261,8 +261,8 @@ class Metabox {
 					}
 				}
 				echo '<input type="hidden" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $field_value ) . '" />';
-				echo '<button type="button" class="button upload-media-button">' . esc_html__( 'Select Media', 'wp-plugin-base' ) . '</button>';
-				echo '<button type="button" class="button remove-media-button">' . esc_html__( 'Remove', 'wp-plugin-base' ) . '</button>';
+				echo '<button type="button" class="button upload-media-button">' . esc_html__( 'Select Media', 'store-boost-kit' ) . '</button>';
+				echo '<button type="button" class="button remove-media-button">' . esc_html__( 'Remove', 'store-boost-kit' ) . '</button>';
 				echo '<div class="media-preview">';
 				if ( $media_url ) {
 					$file_type = wp_check_filetype( $media_url );

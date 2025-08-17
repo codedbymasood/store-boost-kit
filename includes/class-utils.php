@@ -2,12 +2,12 @@
 /**
  * Utils class.
  *
- * @package wp-plugin-base\includes\
+ * @package store-boost-kit\includes\
  * @author Store Boost Kit <hello@storeboostkit.com>
  * @version 1.0
  */
 
-namespace SBK_PB;
+namespace STOBOKIT;
 
 defined( 'ABSPATH' ) || exit;
 

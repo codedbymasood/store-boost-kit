@@ -1,5 +1,5 @@
 
-# WordPress Base Plugin Framework
+# Store Boost Kit Base Plugin Framework
 
 A lightweight, extendable WordPress **plugin boilerplate** built to streamline your development workflow. This base framework includes:
 
@@ -36,17 +36,19 @@ $fields = array(
 			'type'  => 'textarea',
 		),
 		array(
-			'id' => 'faq',
+			'id' => 'faq5',
 			'label' => 'FAQs',
 			'type' => 'repeater',
 			'fields' => array(
 				array(
 					'id' => 'question',
 					'label' => 'Question',
+					'type' => 'textarea',
 				),
 				array(
 					'id' => 'answer',
 					'label' => 'Answer',
+					'type' => 'text',
 				),
 			),
 		),
@@ -119,10 +121,10 @@ $fields = array(
 );
 
 new Metabox(
-	'custom_metabox', // Metabox ID
-	'Custom Fields',  // Title
-	array( 'post' ),  // Post types
-	$fields           // Fields array
+	'sbk-metabox-custom-fields',
+	'Custom Fields',
+	array( 'post' ),
+	$fields
 );
 ```
 

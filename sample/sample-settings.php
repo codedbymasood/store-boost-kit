@@ -105,7 +105,7 @@ add_action(
 			),
 		);
 
-		new SBK_PB\Settings(
+		new STOBOKIT\Settings(
 			'options-general.php',      // Parent menu slug.
 			'sbk-settings-sample',      // menu slug.
 			esc_html__( 'Sample Settings', 'product-expiry-manager-for-woocommerce' ),

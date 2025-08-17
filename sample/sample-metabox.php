@@ -2,12 +2,12 @@
 /**
  * Post metabox.
  *
- * @package wp-plugin-base\admin\metaboxes\
+ * @package store-boost-kit\admin\metaboxes\
  * @author Store Boost Kit <hello@storeboostkit.com>
  * @version 1.0
  */
 
-namespace SBK_PB;
+namespace STOBOKIT;
 
 defined( 'ABSPATH' ) || exit;
 

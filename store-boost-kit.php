@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Store Boost Kit
- * Plugin URI: https://github.com/masoodmohamed90/wp-plugin-base
+ * Plugin URI: https://github.com/masoodmohamed90/store-boost-kit
  * Description: A lightweight and reusable starter framework for building structured, scalable WordPress plugins with clean code and modular architecture.
  * Version: 1.0
  * Author: Store Boost Kit
@@ -16,13 +16,13 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'SBK_PB_PLUGIN_FILE' ) ) {
-	define( 'SBK_PB_PLUGIN_FILE', __FILE__ );
+if ( ! defined( 'STOBOKIT_PLUGIN_FILE' ) ) {
+	define( 'STOBOKIT_PLUGIN_FILE', __FILE__ );
 }
 
 // Include the main class.
 if ( ! class_exists( 'Plugin_Base', false ) ) {
-	include_once dirname( SBK_PB_PLUGIN_FILE ) . '/includes/class-plugin-base.php';
+	include_once dirname( STOBOKIT_PLUGIN_FILE ) . '/includes/class-stobokit.php';
 }
 
 /**
@@ -31,9 +31,9 @@ if ( ! class_exists( 'Plugin_Base', false ) ) {
  * @since  1.0
  * @return WP_Plugin_Base
  */
-function wp_plugin_base() {
-	return \SBK_PB\Plugin_Base::instance();
+function stobokit() {
+	return \STOBOKIT\STOBOKIT::instance();
 }
 
 // Global for backwards compatibility.
-$GLOBALS['wp_plugin_base'] = wp_plugin_base();
+$GLOBALS['stobokit'] = stobokit();

@@ -1,17 +1,122 @@
-.sbk-pb-tab-nav {
-  display: flex;
-  margin: 0;
+body[class*="store-boost-kit_"] {
+  font-size: 15px;
+  color: #1a1a1a;
+  background: #F8FAFC;
 }
 
-.sbk-pb-tab-nav li {
-  padding: 8px 16px;
+.stobokit-wrapper {
+  margin: 80px 0 0 0;
+  position: relative;
+}
+
+.stobokit-wrapper .license-notice {
+  top: -52px;
+  position: absolute;
+  padding: 8px 12px;
   background: #fff;
-  margin: 0 10px 10px 0;
-  border-radius: 4px;
+  border-left: 2px solid #6366F1;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.stobokit-wrapper .license-notice.active {
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.3s ease;
+}
+
+.stobokit-wrapper h2 {
+  font-size: 28px;
+  font-weight: 400;
+}
+
+.stobokit-wrapper table {
+  width: 98%;
+}
+
+.stobokit-wrapper table th,
+.stobokit-wrapper table td {
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px 0;
+  background: #fff;
+  text-align: left;
+}
+
+.stobokit-wrapper table td {
+  padding: 16px 0;
+}
+
+.stobokit-wrapper table input {
+  border: 1px solid #E2E8F0;
+  width: 280px;
+  min-height: 36px;
+  padding: 0 12px;
+}
+
+.stobokit-wrapper table input[type="text"]:focus,
+.stobokit-wrapper table input[type="password"]:focus {
+  border-color: #D1D1FF;
+  box-shadow: 0 0 0 1px #D1D1FF;
+  outline: 2px solid transparent;
+}
+
+.stobokit-wrapper table td {
+  font-weight: 400;
+}
+
+.stobokit-wrapper .btn {
+  background: #6366F1;
+  border-color: #6366F1;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 4px 20px;
+  border-radius: 6px;
+  color: #fff;
   cursor: pointer;
 }
 
-.sbk-pb-tab-nav li.active {
-  background: #2271b1;
+.stobokit-wrapper .btn.btn-red {
+  background: #EF4444;
+  border-color: #EF4444;
+}
+
+.stobokit-wrapper table .product,
+.stobokit-wrapper table .license,
+.stobokit-wrapper table .expires {
+  padding: 0 0 0 24px;
+}
+
+.stobokit-wrapper table .status > span {
+  padding: 4px 10px;
+  background: #F8FAFC;
+  border-radius: 6px;
+  color: #aeafff;
+  font-size: 12px;
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+.stobokit-wrapper table span.active {
+  background: #10B981;
   color: #fff;
+}
+
+
+.stobokit-wrapper table .action {
+  width: 240px;
+  text-align: center;
+}
+
+.stobokit-wrapper table .license {
+  width: 400px;
+}
+
+.stobokit-wrapper table .expires {
+  width: 320px;
+}
+
+.stobokit-wrapper table .status {
+  text-align: center;
 }
