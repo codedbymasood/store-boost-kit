@@ -1,6 +1,9 @@
 (function($) {
   'use strict';
 
+  // Color picker
+  $(".color-picker").wpColorPicker();
+
   const editorInstances = new Map();
 
   const initializeEditor = ( element, type, index ) => {

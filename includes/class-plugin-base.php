@@ -3,11 +3,11 @@
  * Plugin initialization class.
  *
  * @package wp-plugin-base\includes\
- * @author Masood Mohamed <iam.masoodmohd@gmail.com>
+ * @author Store Boost Kit <hello@storeboostkit.com>
  * @version 1.0
  */
 
-namespace WPPB;
+namespace SBK_PB;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -48,27 +48,24 @@ final class Plugin_Base {
 	 * Define plugin constants.
 	 */
 	private function define_constants() {
-		define( 'WPPB_VERSION', '1.0.0' );
-		define( 'WPPB_PATH', plugin_dir_path( dirname( __FILE__ ) ) );
-		define( 'WPPB_URL', plugin_dir_url( dirname( __FILE__ ) ) );
+		define( 'SBK_PB_VERSION', '1.0.0' );
+		define( 'SBK_PB_PATH', plugin_dir_path( dirname( __FILE__ ) ) );
+		define( 'SBK_PB_URL', plugin_dir_url( dirname( __FILE__ ) ) );
 	}
 
 	/**
 	 * Load required files.
 	 */
 	private function load_dependencies() {
-		// require_once WPPB_PATH . 'includes/class-settings.php';
+		require_once SBK_PB_PATH . 'includes/class-utils.php';
+		require_once SBK_PB_PATH . 'admin/class-settings.php';
 	}
 
 	/**
 	 * Hook into WordPress.
 	 */
 	private function init_hooks() {
-		require_once WPPB_PATH . 'includes/sample-settings.php';
 		// Register metaboxes.
-		require_once WPPB_PATH . 'admin/class-metabox.php';
-
-		// Register metaboxes.
-		require_once WPPB_PATH . 'admin/metaboxes/post.php';
+		require_once SBK_PB_PATH . 'admin/class-metabox.php';
 	}
 }

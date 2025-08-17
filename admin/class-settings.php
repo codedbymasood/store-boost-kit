@@ -3,11 +3,11 @@
  * Settings class.
  *
  * @package wp-plugin-base\admin\
- * @author Masood Mohamed <iam.masoodmohd@gmail.com>
+ * @author Store Boost Kit <hello@storeboostkit.com>
  * @version 1.0
  */
 
-namespace WPPB;
+namespace SBK_PB;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -128,11 +128,11 @@ class Settings {
 
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_style( 'settings', WPPB_URL . '/admin/assets/css/settings.css', array(), '1.0' );
+		wp_enqueue_style( 'settings', SBK_PB_URL . '/admin/assets/css/settings.css', array(), '1.0' );
 
 		wp_enqueue_code_editor( array( 'type' => 'text/html' ) );
 		wp_enqueue_code_editor( array( 'type' => 'text/css' ) );
-		wp_enqueue_script( 'settings', WPPB_URL . '/admin/assets/js/settings.js', array( 'jquery', 'code-editor' ), '1.0', true );
+		wp_enqueue_script( 'settings', SBK_PB_URL . '/admin/assets/js/settings.js', array( 'jquery', 'code-editor' ), '1.0', true );
 	}
 
 	/**
@@ -146,7 +146,7 @@ class Settings {
 			return;
 		}
 
-		if ( ! isset( $_POST[ $this->nonce_name ] ) || ! wp_verify_nonce( wp_unslash( $_POST[ $this->nonce_name ] ), $this->nonce_action ) ) {
+		if ( ! isset( $_POST[ $this->nonce_name ] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ $this->nonce_name ] ) ), $this->nonce_action ) ) {
 			return;
 		}
 
@@ -158,7 +158,32 @@ class Settings {
 			foreach ( $tab_fields as $field ) {
 				$id    = $field['id'];
 				$type  = isset( $field['type'] ) ? $field['type'] : 'text';
-				$value = isset( $_POST[ $id ] ) ? wp_unslash( $_POST[ $id ] ) : ( isset( $field['default'] ) ? $field['default'] : '' );
+
+				if ( 'richtext_editor' === $type ) {
+					if ( isset( $_POST[ $id ] ) && is_array( $_POST[ $id ] ) ) {
+							$raw_value = wp_unslash( $_POST[ $id ] );
+
+							$value = array(
+								'html' => isset( $raw_value['html'] )
+									? wp_kses_post( $raw_value['html'] )
+									: '',
+								'css'  => isset( $raw_value['css'] )
+									? sanitize_textarea_field( $raw_value['css'] )
+									: '',
+							);
+					} else {
+						$value = isset( $field['default'] )
+							? $field['default']
+							: array(
+								'html' => '',
+								'css'  => '',
+							);
+					}
+				} else {
+					$value = isset( $_POST[ $id ] )
+						? sanitize_text_field( wp_unslash( $_POST[ $id ] ) )
+						: ( isset( $field['default'] ) ? sanitize_text_field( wp_unslash( $field['default'] ) ) : '' );
+				}
 
 				switch ( $type ) {
 					case 'checkbox':
@@ -182,7 +207,7 @@ class Settings {
 		}
 
 		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
-			wp_safe_redirect( add_query_arg( 'settings-updated', 'true', wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+			wp_safe_redirect( add_query_arg( 'settings-updated', 'true', sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) );
 		}
 		exit;
 	}
@@ -199,7 +224,7 @@ class Settings {
 
 		$current_tab = isset( $_GET['tab'] ) && ! empty( isset( $_GET['tab'] ) ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : Utils::convert_case( $tabs[0] );
 		?>
-		<div class="wrap">
+		<div class="sbk-settings-wrapper wrap">
 			<h1><?php echo esc_html( $this->page_title ); ?></h1>	
 			<?php if ( isset( $_GET['settings-updated'] ) ) : ?>
 				<div class="notice notice-success is-dismissible">
@@ -226,7 +251,7 @@ class Settings {
 						<?php endforeach; ?>
 					</div>
 				<?php endforeach; ?>
-				<?php submit_button( 'Save Settings' ); ?>
+				<?php submit_button( esc_html__( 'Save Settings', 'wp-plugin-base' ) ); ?>
 			</form>
 		</div>
 		<?php
@@ -239,7 +264,7 @@ class Settings {
 	 * @return void
 	 */
 	private function render_field( $field ) {
-		$id    = $field['id'];
+		$id    = isset( $field['id'] ) ? $field['id'] : '';
 		$name  = $id;
 		$value = get_option( $id, '' );
 
@@ -247,6 +272,7 @@ class Settings {
 			$value = $field['default'];
 		}
 
+		$title       = isset( $field['title'] ) ? $field['title'] : '';
 		$type        = isset( $field['type'] ) ? $field['type'] : 'text';
 		$label       = isset( $field['label'] ) ? $field['label'] : '';
 		$description = isset( $field['description'] ) ? $field['description'] : '';
@@ -257,17 +283,22 @@ class Settings {
 			$css_value      = isset( $value['css'] ) ? $value['css'] : '';
 		}
 		?>
-		<div class="field-wrap field-<?php echo esc_attr( $type ); ?>">
-			<?php if ( $label ) : ?>
-				<label for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $label ); ?></label>
-			<?php endif; ?>
 
+		<?php if ( 'group_start' !== $type && 'group_end' !== $type ) { ?>
+			<div class="field-wrap field-<?php echo esc_attr( $type ); ?>">
+				<?php if ( $label ) : ?>
+					<label for="<?php echo esc_attr( $id ); ?>"><?php echo esc_html( $label ); ?></label>
+				<?php endif; ?>
+		<?php } ?>
 			<?php
 			switch ( $type ) {
 				case 'group_start':
 					echo '<div class="field-group">';
+					echo '<p class="field-title">' . esc_html( $title ) . '</p>';
+					echo '<div class="field-content">';
 					break;
 				case 'group_end':
+					echo '</div>';
 					echo '</div>';
 					break;
 				case 'textarea':
@@ -278,16 +309,18 @@ class Settings {
 					echo '<select id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '">';
 					foreach ( $field['options'] as $opt_val => $opt_label ) {
 						$selected = selected( $value, $opt_val, false );
-						echo '<option value="' . esc_attr( $opt_val ) . '"' . $selected . '>' . esc_html( $opt_label ) . '</option>';
+						echo '<option value="' . esc_attr( $opt_val ) . '"' . esc_attr( $selected ) . '>' . esc_html( $opt_label ) . '</option>';
 					}
 					echo '</select>';
 					break;
 
 				case 'radio':
+					echo '<div class="radio-group">';
 					foreach ( $field['options'] as $opt_val => $opt_label ) {
 						$checked = checked( $value, $opt_val, false );
-						echo '<label><input type="radio" name="' . esc_attr( $name ) . '" value="' . esc_attr( $opt_val ) . '"' . $checked . '> ' . esc_html( $opt_label ) . '</label><br>';
+						echo '<label><input type="radio" name="' . esc_attr( $name ) . '" value="' . esc_attr( $opt_val ) . '"' . esc_attr( $checked ) . '> ' . esc_html( $opt_label ) . '</label>';
 					}
+					echo '</div>';
 					break;
 
 				case 'checkbox':
@@ -308,7 +341,7 @@ class Settings {
 					echo '<div class="richtext-editor" data-default-editor="' . esc_attr( $default_editor ) . '">';
 
 					if ( in_array( array( 'html', 'css' ), array( $field['options'] ), true ) ) {
-						echo '<ul class="wppb-tab-nav">';
+						echo '<ul class="sbk-pb-tab-nav">';
 							echo '<li data-type="html" class="' . ( ( 'html' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'HTML', 'review-requester-for-woocommerce' ) . '</li>';
 							echo '<li data-type="css" class="' . ( ( 'css' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'CSS', 'review-requester-for-woocommerce' ) . '</li>';
 						echo '</ul>';
@@ -333,7 +366,9 @@ class Settings {
 					break;
 			}
 			?>
+		<?php if ( 'group_start' !== $type && 'group_end' !== $type ) { ?>
 		</div>
+		<?php } ?>
 		<?php
 	}
 }

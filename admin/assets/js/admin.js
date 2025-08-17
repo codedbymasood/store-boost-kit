@@ -49,7 +49,10 @@
         var container = $(this).siblings(".repeater-container");
         var template = container.find(".repeater-template").html();
         var index = container.find(".repeater-item").length;
-        template = template.replace(/\{INDEX\}/g, index);
+
+        console.log(index);
+        
+        template = template.replace(/\{INDEX_DISPLAY\}/g, index+1);
         container.append(template);
         checkConditions();
     });

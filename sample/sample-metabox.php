@@ -3,11 +3,11 @@
  * Post metabox.
  *
  * @package wp-plugin-base\admin\metaboxes\
- * @author Masood Mohamed <iam.masoodmohd@gmail.com>
+ * @author Store Boost Kit <hello@storeboostkit.com>
  * @version 1.0
  */
 
-namespace WPPB;
+namespace SBK_PB;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -109,7 +109,7 @@ $fields = array(
 );
 
 new Metabox(
-	'custom_metabox',
+	'sbk-metabox-custom-fields',
 	'Custom Fields',
 	array( 'post' ),
 	$fields

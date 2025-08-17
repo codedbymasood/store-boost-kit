@@ -3,11 +3,11 @@
  * Metabox register class.
  *
  * @package wp-plugin-base\admin\
- * @author Masood Mohamed <iam.masoodmohd@gmail.com>
+ * @author Store Boost Kit <hello@storeboostkit.com>
  * @version 1.0
  */
 
-namespace WPPB;
+namespace SBK_PB;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -57,14 +57,15 @@ class Metabox {
 		wp_enqueue_media();
 		wp_enqueue_script( 'wp-color-picker' );
 		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_style( 'metabox', WPPB_URL . 'admin/assets/css/metabox.css', array(), '1.0' );
-		wp_enqueue_script( 'admin', WPPB_URL . 'admin/assets/js/admin.js', array(), '1.0', true );
+		wp_enqueue_style( 'metabox', SBK_PB_URL . 'admin/assets/css/metabox.css', array(), '1.0' );
+		wp_enqueue_script( 'admin', SBK_PB_URL . 'admin/assets/js/admin.js', array(), '1.0', true );
 	}
 
 	public function render_metabox( $post ) {
 		wp_nonce_field( $this->metabox_id . '_nonce', $this->metabox_id . '_nonce' );
 
 		if ( count( $this->fields ) > 1 ) {
+			echo '<div class="metabox-tab-wrapper">';
 			// Render tabs if multiple field groups.
 			echo '<div class="metabox-tabs">';
 			$first = true;
@@ -79,6 +80,7 @@ class Metabox {
 
 			// Render tab content.
 			$first = true;
+			echo '<div class="metabox-tab-content-wrapper">';
 			foreach ( $this->fields as $tab_name => $tab_fields ) {
 				$active_class = $first ? 'active' : '';
 				$tab_id       = sanitize_title( $tab_name );
@@ -87,6 +89,8 @@ class Metabox {
 				echo '</div>';
 				$first = false;
 			}
+			echo '</div>';
+			echo '</div>';
 		} else {
 			// Render single group.
 			$this->render_fields( reset( $this->fields ), $post );
@@ -101,16 +105,16 @@ class Metabox {
 
 	private function render_field( $field, $post, $is_repeater = false, $repeater_index = null, $parent_field_id = null ) {
 		if ( $is_repeater ) {
-			$field_id    = $this->metabox_id . '_' . $parent_field_id . '_' . $repeater_index . '_' . $field['id'];
-			$field_name  = $this->metabox_id . '[' . $parent_field_id . '][' . $repeater_index . '][' . $field['id'] . ']';
-			
-			// Get repeater field value
-			$parent_value = get_post_meta( $post->ID, $this->metabox_id . '[' . $parent_field_id . ']', true );
+			$field_id    = $parent_field_id . '_' . $repeater_index . '_' . $field['id'];
+			$field_name  = $parent_field_id . '[' . $repeater_index . '][' . $field['id'] . ']';
+
+			// Get repeater field value - using direct field ID.
+			$parent_value = get_post_meta( $post->ID, $parent_field_id, true );
 			$field_value = isset( $parent_value[$repeater_index][$field['id']] ) ? $parent_value[$repeater_index][$field['id']] : '';
 		} else {
-			$field_id    = $this->metabox_id . '_' . $field['id'];
-			$field_name  = $this->metabox_id . '[' . $field['id'] . ']';
-			$field_value = get_post_meta( $post->ID, $field_name, true );
+			$field_id    = $field['id'];
+			$field_name  = $field['id'];
+			$field_value = get_post_meta( $post->ID, $field['id'], true );
 		}
 
 		$condition_attr = '';
@@ -118,13 +122,13 @@ class Metabox {
 			$condition_attr = 'data-condition="' . esc_attr( wp_json_encode( $field['condition'] ) ) . '"';
 		}
 
-		echo '<div class="metabox-field" ' . $condition_attr . '>';
+		echo '<div class="metabox-field ' . esc_attr( $field['type'] ) . '"' . esc_attr( $condition_attr ) . '>';
 
 		if ( isset( $field['label'] ) ) {
 			echo '<label for="' . esc_attr( $field_id ) . '">' . esc_html( $field['label'] ) . '</label>';
 		}
 
-		// Handle repeater field type
+		// Handle repeater field type.
 		if ( $field['type'] === 'repeater' && !$is_repeater ) {
 			$this->render_repeater_field( $field, $post, $field_value );
 		} else {
@@ -143,13 +147,13 @@ class Metabox {
 		$repeater_values = (array) $field_value;
 		echo '<div class="repeater-container" data-field-id="' . esc_attr( $field['id'] ) . '">';
 
-		// Render existing items
+		// Render existing items.
 		if ( !empty( $repeater_values ) && is_array( $repeater_values ) ) {
 			foreach ( $repeater_values as $index => $repeater_value ) {
 				echo '<div class="repeater-item" data-index="' . esc_attr( $index ) . '">';
 				echo '<div class="repeater-header">';
-				echo '<span class="repeater-title">' . esc_html__( 'Item', 'wp-plugin-base' ) . ' ' . ($index + 1) . '</span>';
-				echo '<span class="remove-item">×</span>';
+				echo '<span class="repeater-title">' . esc_html__( 'Item: ', 'wp-plugin-base' ) . ' ' . esc_html( ( (int) $index + 1 ) ) . '</span>';
+				echo '<span class="remove-item"><span class="dashicons dashicons-no-alt"></span></span>';
 				echo '</div>';
 				echo '<div class="repeater-content">';
 
@@ -166,14 +170,14 @@ class Metabox {
 		echo '<script type="text/template" class="repeater-template">';
 		echo '<div class="repeater-item" data-index="{INDEX}">';
 		echo '<div class="repeater-header">';
-		echo '<span class="repeater-title">' . esc_html__( 'Item', 'wp-plugin-base' ) . ' {INDEX_DISPLAY}</span>';
+		echo '<span class="repeater-title">' . esc_html__( 'Item: ', 'wp-plugin-base' ) . ' {INDEX_DISPLAY}</span>';
 		echo '<span class="remove-item">×</span>';
 		echo '</div>';
 		echo '<div class="repeater-content">';
 
 		foreach ( $field['fields'] as $repeater_field ) {
-			$template_field_id = $this->metabox_id . '_' . $field['id'] . '_{INDEX}_' . $repeater_field['id'];
-			$template_field_name = $this->metabox_id . '[' . $field['id'] . '][{INDEX}][' . $repeater_field['id'] . ']';
+			$template_field_id = $field['id'] . '_{INDEX}_' . $repeater_field['id'];
+			$template_field_name = $field['id'] . '[{INDEX}][' . $repeater_field['id'] . ']';
 
 			echo '<div class="metabox-field">';
 			if ( isset( $repeater_field['label'] ) ) {
@@ -221,9 +225,9 @@ class Metabox {
 			case 'radio':
 				if ( isset( $field['options'] ) ) {
 					foreach ( $field['options'] as $option_value => $option_label ) {
-						$checked = checked( $field_value, $option_value, false );
+						$checked  = checked( $field_value, $option_value, false );
 						$radio_id = $field_id . '_' . $option_value;
-						echo '<label for="' . esc_attr( $radio_id ) . '"><input type="radio" id="' . esc_attr( $radio_id ) . '" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $option_value ) . '" ' . $checked . '/>' . esc_html( $option_label ) . '</label><br>';
+						echo '<label for="' . esc_attr( $radio_id ) . '"><input type="radio" id="' . esc_attr( $radio_id ) . '" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $option_value ) . '" ' . esc_attr( $checked ) . '/>' . esc_html( $option_label ) . '</label>';
 					}
 				}
 				break;
@@ -235,10 +239,10 @@ class Metabox {
 
 			case 'switch':
 				$checked = checked( $field_value, '1', false );
-				echo '<div class="switch-container">';
+				echo '<label class="switch-control">';
 				echo '<input type="checkbox" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" value="1" ' . $checked . ' />';
-				echo '<span class="switch-slider"></span>';
-				echo '</div>';
+				echo '<span class="slider round"></span>';
+				echo '</label>';
 				break;
 
 			case 'color':
@@ -286,14 +290,60 @@ class Metabox {
 			return;
 		}
 
-		if ( isset( $_POST[ $this->metabox_id ] ) ) {
-			$data = $_POST[ $this->metabox_id ];
-			foreach ( $data as $key => $value ) {
-				// Sanitize data before saving
-				$sanitized_value = $this->sanitize_field_value( $value );
-				update_post_meta( $post_id, $this->metabox_id . '[' . $key . ']', $sanitized_value );
+		// Get all field IDs.
+		$all_field_ids = $this->get_all_field_ids( $this->fields );
+
+		foreach ( $all_field_ids as $field_id ) {
+			if ( isset( $_POST[ $field_id ] ) ) {
+				$sanitized_value = $this->sanitize_field_value( $_POST[ $field_id ] );
+				update_post_meta( $post_id, $field_id, $sanitized_value );
+			} else {
+				// For non-repeater fields, delete meta if field is not present (for checkboxes, etc.)
+				// For repeater fields, we need to check if it's a repeater to avoid deleting valid empty arrays.
+				$is_repeater_field = $this->is_repeater_field( $field_id );
+				if ( ! $is_repeater_field ) {
+					delete_post_meta( $post_id, $field_id );
+				}
 			}
 		}
+	}
+
+	/**
+	 * Get all field IDs from the fields configuration.
+	 *
+	 * @param array $fields Fields.
+	 * @return array
+	 */
+	private function get_all_field_ids( $fields ) {
+		$field_ids = array();
+
+		foreach ( $fields as $tab_fields ) {
+			if ( is_array( $tab_fields ) ) {
+				foreach ( $tab_fields as $field ) {
+					$field_ids[] = $field['id'];
+				}
+			}
+		}
+		return $field_ids;
+	}
+
+	/**
+	 * Check if a field ID belongs to a repeater field.
+	 *
+	 * @param string $field_id Field ID.
+	 * @return boolean
+	 */
+	private function is_repeater_field( $field_id ) {
+		foreach ( $this->fields as $tab_fields ) {
+			if ( is_array( $tab_fields ) ) {
+				foreach ( $tab_fields as $field ) {
+					if ( $field['id'] === $field_id && isset( $field['type'] ) && $field['type'] === 'repeater' ) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	private function sanitize_field_value( $value ) {
@@ -301,12 +351,10 @@ class Metabox {
 			return array_map( array( $this, 'sanitize_field_value' ), $value );
 		}
 
-		// Basic sanitization - you might want to make this more specific based on field type
 		return sanitize_text_field( $value );
 	}
 
-	// Helper method to get field value.
-	public static function get_field( $post_id, $metabox_id, $field_id ) {
-		return get_post_meta( $post_id, $metabox_id . '[' . $field_id . ']', true );
+	public static function get_field( $post_id, $field_id ) {
+		return get_post_meta( $post_id, $field_id, true );
 	}
 }

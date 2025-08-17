@@ -1,12 +1,367 @@
-.tab-content {
+/* Base Settings Page Styles */
+body[class*="settings_page_sbk-settings"] {
+  font-size: 15px;
+  color: #1a1a1a;
+  background: #F8FAFC;
+}
+
+/* Navigation Tabs */
+.sbk-settings-wrapper ul.sbk-pb-tab-nav {
+  display: flex;
+  gap: 12px;
+}
+
+.sbk-settings-wrapper ul.sbk-pb-tab-nav li {
+  padding: 4px 12px;
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.sbk-settings-wrapper ul.sbk-pb-tab-nav li.active {
+  border: 1px solid #6366F1;
+}
+
+/* Field Groups */
+.sbk-settings-wrapper .field-group {
+  background: #fff;
+  margin: 0 0 28px 0;
+  border: 1px solid #E2E8F0;
+}
+
+.sbk-settings-wrapper .field-title {
+  padding: 12px 28px;
+  border-bottom: 1px solid #E2E8F0;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.sbk-settings-wrapper .field-content {
+  padding: 28px 28px 12px 28px;
+}
+
+/* Form Inputs - Consolidated */
+.sbk-settings-wrapper input[type="text"],
+.sbk-settings-wrapper input[type="password"],
+.sbk-settings-wrapper input[type="color"],
+.sbk-settings-wrapper input[type="date"],
+.sbk-settings-wrapper input[type="datetime"],
+.sbk-settings-wrapper input[type="datetime-local"],
+.sbk-settings-wrapper input[type="email"],
+.sbk-settings-wrapper input[type="month"],
+.sbk-settings-wrapper input[type="number"],
+.sbk-settings-wrapper input[type="search"],
+.sbk-settings-wrapper input[type="tel"],
+.sbk-settings-wrapper input[type="time"],
+.sbk-settings-wrapper input[type="url"],
+.sbk-settings-wrapper input[type="week"],
+.sbk-settings-wrapper select,
+.sbk-settings-wrapper textarea {
+  border: 1px solid #E2E8F0;
+  height: 40px;
+  padding: 0 12px;
+}
+
+/* Form Focus States - Consolidated */
+.sbk-settings-wrapper input[type="text"]:focus,
+.sbk-settings-wrapper input[type="password"]:focus,
+.sbk-settings-wrapper input[type="color"]:focus,
+.sbk-settings-wrapper input[type="date"]:focus,
+.sbk-settings-wrapper input[type="datetime"]:focus,
+.sbk-settings-wrapper input[type="datetime-local"]:focus,
+.sbk-settings-wrapper input[type="email"]:focus,
+.sbk-settings-wrapper input[type="month"]:focus,
+.sbk-settings-wrapper input[type="number"]:focus,
+.sbk-settings-wrapper input[type="search"]:focus,
+.sbk-settings-wrapper input[type="tel"]:focus,
+.sbk-settings-wrapper input[type="time"]:focus,
+.sbk-settings-wrapper input[type="url"]:focus,
+.sbk-settings-wrapper input[type="week"]:focus,
+.sbk-settings-wrapper input[type="checkbox"]:focus,
+.sbk-settings-wrapper input[type="radio"]:focus,
+.sbk-settings-wrapper select:focus,
+.sbk-settings-wrapper textarea:focus {
+  border-color: #D1D1FF;
+  box-shadow: 0 0 0 1px #D1D1FF;
+  outline: 2px solid transparent;
+}
+
+/* Specific Input Sizing */
+.sbk-settings-wrapper input[type="number"] {
+  width: 120px;
+}
+
+.sbk-settings-wrapper select {
+  min-width: 180px;
+}
+
+.sbk-settings-wrapper textarea {
+  padding: 12px;
+  min-height: 160px;
+}
+
+/* General Focus */
+.sbk-settings-wrapper a:focus {
+  color: #6366F1;
+  box-shadow: none;
+  outline: 2px solid transparent;
+}
+
+/* WordPress Nav Tabs */
+.sbk-settings-wrapper h1.nav-tab-wrapper,
+.sbk-settings-wrapper .wrap h2.nav-tab-wrapper,
+.sbk-settings-wrapper .nav-tab-wrapper {
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.sbk-settings-wrapper .nav-tab {
+  border: 1px solid #E2E8F0;
+  color: #1a1a1a;
+  background: #fff;
+  border-bottom: 0;
+}
+
+.sbk-settings-wrapper .nav-tab-active,
+.sbk-settings-wrapper .nav-tab-active:hover,
+.sbk-settings-wrapper .nav-tab-active:focus,
+.sbk-settings-wrapper .nav-tab-active:focus:active {
+  border-bottom: 1px solid #6366F1;
+}
+
+/* Primary Button */
+.sbk-settings-wrapper .wp-core-ui .button-primary {
+  background: #6366F1;
+  border-color: #6366F1;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 4px 20px;
+  border-radius: 6px;
+}
+
+/* Layout */
+.sbk-settings-wrapper .tab-content {
   margin: 30px 0 0 0;
+  max-width: 1200px;
 }
 
-.field-wrap {
-  margin: 0 0 10px 0;
+.sbk-settings-wrapper .field-wrap {
+  margin: 0 0 24px 0;
+  display: flex;
+  align-items: center;
 }
 
-.field-wrap label {
-  width: 150px;
+.sbk-settings-wrapper .field-wrap.field-richtext_editor,
+.sbk-settings-wrapper .field-wrap.field-radio,
+.sbk-settings-wrapper .field-wrap.field-textarea,
+.sbk-settings-wrapper .field-wrap.field-color {
+  align-items: flex-start;
+}
+
+.sbk-settings-wrapper .field-wrap label {
+  width: 240px;
   display: inline-block;
+}
+
+/* Color Picker */
+.sbk-settings-wrapper span.wp-picker-input-wrap label {
+  width: auto;
+}
+
+.sbk-settings-wrapper .wp-picker-input-wrap .button.wp-picker-clear {
+  font-size: 13px;
+  color: #6366F1;
+  border-color: #6366F1;
+}
+
+.sbk-settings-wrapper .wp-picker-container .wp-color-result.button {
+  min-height: 32px;
+  border-radius: 6px;
+  padding: 0 0 0 32px;
+  font-size: 13px;
+  color: #D1D1FF;
+  border-color: #D1D1FF;
+  box-shadow: none;
+}
+
+.sbk-settings-wrapper .wp-picker-container input[type="text"].wp-color-picker {
+  width: 6rem;
+  font-size: 14px;
+  padding: 0 12px;
+  height: 34px;
+}
+
+.sbk-settings-wrapper .wp-picker-holder {
+  position: absolute;
+}
+
+.sbk-settings-wrapper .wp-color-result-text {
+  line-height: 32px;
+  border-radius: 0 4px 4px 0;
+  padding: 0 16px;
+  background: #fff;
+  border: 0;
+  color: #1a1a1a;
+}
+
+.sbk-settings-wrapper .wp-picker-container .iris-picker {
+  border-color: #E2E8F0;
+}
+
+/* Radio Buttons */
+.sbk-settings-wrapper .radio-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.sbk-settings-wrapper .radio-group label {
+  margin: 0 0 8px 0;
+}
+
+.sbk-settings-wrapper input[type="radio"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #F1F3FD;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  background-color: #fff;
+  transition: all 0.2s ease;
+}
+
+.sbk-settings-wrapper input[type="radio"]:checked {
+  border-color: #6366F1;
+  background-color: #6366F1;
+}
+
+.sbk-settings-wrapper input[type="radio"]:checked::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.sbk-settings-wrapper input[type="radio"]:hover {
+  border-color: #6366F1;
+}
+
+/* Checkboxes */
+.sbk-settings-wrapper input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #F1F3FD;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.sbk-settings-wrapper input[type="checkbox"]:hover {
+  border-color: #6366F1;
+}
+
+.sbk-settings-wrapper input[type="checkbox"]:checked {
+  background: #6366F1;
+  border-color: #6366F1;
+}
+
+.sbk-settings-wrapper input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 0px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Toggle Switch */
+.sbk-settings-wrapper .field-wrap .switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.sbk-settings-wrapper .field-wrap .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.sbk-settings-wrapper .field-wrap .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #F1F3FD;
+  transition: 0.3s;
+  border-radius: 24px;
+}
+
+.sbk-settings-wrapper .field-wrap .slider::before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.sbk-settings-wrapper .switch input:checked + .slider {
+  background-color: #6366F1;
+}
+
+.sbk-settings-wrapper .switch input:checked + .slider::before {
+  transform: translateX(20px);
+}
+
+.sbk-settings-wrapper .slider.round {
+  border-radius: 24px;
+}
+
+/* Rich Text Editor */
+.sbk-settings-wrapper .richtext-editor {
+  min-width: 720px;
+}
+
+.sbk-settings-wrapper .CodeMirror-sizer {
+  padding: 6px 0 0 42px;
+}
+
+.sbk-settings-wrapper .CodeMirror-gutters {
+  border-right: 1px solid #E2E8F0;
+  background-color: #F1F2FD;
+  white-space: nowrap;
+}
+
+/* Notices */
+.sbk-settings-wrapper .notice,
+.sbk-settings-wrapper div.updated,
+.sbk-settings-wrapper div.error {
+  border-color: #E2E8F0;
+  box-shadow: none;
+}
+
+.sbk-settings-wrapper .notice-success,
+.sbk-settings-wrapper div.updated {
+  border-left-color: #10B981;
 }
