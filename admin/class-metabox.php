@@ -167,7 +167,7 @@ class Metabox {
 			foreach ( $repeater_values as $index => $repeater_value ) {
 				echo '<div class="repeater-item" data-index="' . esc_attr( $index ) . '">';
 				echo '<div class="repeater-header">';
-				echo '<span class="repeater-title">' . esc_html__( 'Item: ', 'plugin-slug' ) . ' ' . esc_html( ( (int) $index + 1 ) ) . '</span>';
+				echo '<span class="repeater-title">' . esc_html__( 'Item: ', 'store-boost-kit' ) . ' ' . esc_html( ( (int) $index + 1 ) ) . '</span>';
 				echo '<span class="remove-item"><span class="dashicons dashicons-no-alt"></span></span>';
 				echo '</div>';
 				echo '<div class="repeater-content">';
@@ -185,7 +185,7 @@ class Metabox {
 		echo '<script type="text/template" class="repeater-template">';
 		echo '<div class="repeater-item" data-index="{INDEX}">';
 		echo '<div class="repeater-header">';
-		echo '<span class="repeater-title">' . esc_html__( 'Item: ', 'plugin-slug' ) . ' {INDEX_DISPLAY}</span>';
+		echo '<span class="repeater-title">' . esc_html__( 'Item: ', 'store-boost-kit' ) . ' {INDEX_DISPLAY}</span>';
 		echo '<span class="remove-item"><span class="dashicons dashicons-no-alt"></span></span>';
 		echo '</div>';
 		echo '<div class="repeater-content">';
@@ -213,7 +213,7 @@ class Metabox {
 		echo '</script>';
 
 		echo '</div>';
-		echo '<button type="button" class="button add-repeater-item">' . esc_html__( 'Add Item', 'plugin-slug' ) . '</button>';
+		echo '<button type="button" class="button add-repeater-item">' . esc_html__( 'Add Item', 'store-boost-kit' ) . '</button>';
 	}
 
 	private function render_field_input( $field, $field_id, $field_name, $field_value, $is_repeater = false ) {
@@ -308,10 +308,10 @@ class Metabox {
 					'<button type="button" class="button upload-media-button" data-multiple="%s" data-file-type="%s">%s</button>',
 					( $multiple ) ? 'true' : 'false',
 					esc_attr( is_array( $file_type ) ? wp_json_encode( $file_type ) : $file_type ),
-					esc_html__( 'Select Media', 'plugin-slug' )
+					esc_html__( 'Select Media', 'store-boost-kit' )
 				);
 
-				echo '<button type="button" class="button remove-media-button">' . esc_html__( 'Remove All', 'plugin-slug' ) . '</button>';
+				echo '<button type="button" class="button remove-media-button">' . esc_html__( 'Remove All', 'store-boost-kit' ) . '</button>';
 
 				echo '<div class="media-preview">';
 
