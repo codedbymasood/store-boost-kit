@@ -134,7 +134,7 @@
 			const slug = $tr.data('slug');
 			
 			const data = {
-				action: 'sbk_activate_license',
+				action: 'stobokit_activate_license',
 				id: $tr.data('id'),
 				slug,
 				license: $(`[name="${slug}_license_key"]`).val(),
@@ -170,7 +170,7 @@
 		const slug = $tr.data('slug');
 		
 		const data = {
-			action: 'sbk_deactivate_license',
+			action: 'stobokit_deactivate_license',
 			id: $tr.data('id'),
 			slug,
 			license: $(`[name="${slug}_license_key"]`).val(),
